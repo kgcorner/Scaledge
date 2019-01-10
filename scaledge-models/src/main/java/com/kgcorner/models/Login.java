@@ -1,0 +1,50 @@
+package com.kgcorner.models;
+
+import org.springframework.data.annotation.Id;
+
+import java.io.Serializable;
+
+public class Login implements Serializable {
+
+    @Id
+    private String id;
+    private String userName;
+    private String password;
+    private User user;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public static String getUserNameKeyName() {
+        return "userName";
+    }
+}
