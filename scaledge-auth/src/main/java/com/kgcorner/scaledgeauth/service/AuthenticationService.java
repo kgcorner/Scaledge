@@ -49,8 +49,10 @@ public class AuthenticationService {
         }
         String userName = combo[0];
         String password = combo[1];
-        Login login = loginRepository.getByKey(Login.getUserNameKeyName(), userName);
-
+        Login login = loginRepository.getByKey(Login.getUserNameKeyName(), userName, Login.class);
+        if(login == null) {
+            throw new AuthenticationFailedException();
+        }
         if(!login.getPassword().equals(password)) {
             throw new AuthenticationFailedException();
         }

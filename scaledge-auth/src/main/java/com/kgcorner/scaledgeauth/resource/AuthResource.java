@@ -2,6 +2,9 @@ package com.kgcorner.scaledgeauth.resource;
 
 import com.kgcorner.models.Token;
 import com.kgcorner.models.User;
+import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
+import com.kgcorner.scaledgeauth.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -14,6 +17,8 @@ public class AuthResource {
     static final String AUTHORIZATION_TOKEN = "Authorization";
     static final String REFRESH_TOKEN = "refresh-token";
 
+    @Autowired
+    private AuthenticationService authenticationService;
 
     /**
      * Validates login and generates a bearer token
@@ -23,7 +28,11 @@ public class AuthResource {
     @GetMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     Token login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
-        return null;
+        try {
+            return authenticationService.getToken(authorizationToken);
+        } catch (AuthenticationFailedException e) {
+            return null;
+        }
     }
 
     /**

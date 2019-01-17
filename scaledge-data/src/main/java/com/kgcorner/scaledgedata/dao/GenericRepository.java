@@ -19,59 +19,52 @@ public class GenericRepository<T extends Serializable> implements ScaledgeReposi
     @Autowired
     private MongoTemplate template;
 
-    private final Class<T> documentType;
-
-    public GenericRepository() {
-        this.documentType = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
-    }
-
     /**
-     * @see ScaledgeRepository#getAll()
+     * @see ScaledgeRepository#getAll(Class) 
      */
     @Override
-    public List getAll() {
-        return template.findAll(documentType);
+    public List<T> getAll(Class<T> type) {
+        return template.findAll(type);
     }
 
     /**
-     * @see ScaledgeRepository#getAll(int)
+     * @see ScaledgeRepository#getAll(int, Class)
      */
     @Override
-    public List getAll(int maxCount) {
-        return getAll(0, maxCount);
+    public List getAll(int maxCount, Class<T> type) {
+        return getAll(0, maxCount, type);
     }
 
     /**
-     * @see ScaledgeRepository#getAll(int, int)
+     * @see ScaledgeRepository#getAll(int, int, Class)
      * @param page
      * @param itemsCount
      */
     @Override
-    public List getAll(int page, int itemsCount) {
+    public List getAll(int page, int itemsCount, Class<T> type) {
         Pageable pageable = PageRequest.of(page, itemsCount);
         Query query = new Query().with(pageable);
-        return template.find(query, documentType);
+        return template.find(query, type);
     }
 
     /**
-     * @see ScaledgeRepository#getById(String)
+     * @see ScaledgeRepository#getById(String, Class)
      */
     @Override
-    public T getById(String id) {
+    public T getById(String id, Class<T> type) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
-        return template.findOne(query, documentType);
+        return template.findOne(query, type);
     }
 
     /**
-     * @see ScaledgeRepository#getByKey(String, String)
+     * @see ScaledgeRepository#getByKey(String, String, Class)
      */
     @Override
-    public T getByKey(String key, String value) {
+    public T getByKey(String key, String value, Class<T> type) {
         Query query = new Query();
         query.addCriteria(Criteria.where(key).is(value));
-        return template.findOne(query, documentType);
+        return template.findOne(query, type);
     }
 
     /**

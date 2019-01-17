@@ -4,10 +4,8 @@ import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 
-public class Login implements Serializable {
+public class Login extends BaseModel {
 
-    @Id
-    private String id;
     private String userName;
     private String password;
     private User user;
@@ -34,14 +32,6 @@ public class Login implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public static String getUserNameKeyName() {

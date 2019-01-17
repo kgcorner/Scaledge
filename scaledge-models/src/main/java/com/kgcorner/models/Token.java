@@ -3,6 +3,7 @@ package com.kgcorner.models;
 import java.util.Date;
 
 public class Token {
+
     private String accessToken;
     private String refreshToken;
     private Date expiresOn;
