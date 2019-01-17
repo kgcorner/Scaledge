@@ -14,6 +14,9 @@ public class Token {
         this.expiresOn = expiresOn;
     }
 
+    public Token() {
+    }
+
     public String getAccessToken() {
         return accessToken;
     }
