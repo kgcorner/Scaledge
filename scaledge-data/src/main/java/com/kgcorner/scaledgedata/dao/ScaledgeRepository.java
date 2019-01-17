@@ -60,5 +60,12 @@ public interface ScaledgeRepository<T extends Serializable> {
      */
     T create(T document);
 
+    /**
+     * Updates given document
+     * @param document
+     * @return returns updated document
+     */
+    T update(T document);
+
 
 }

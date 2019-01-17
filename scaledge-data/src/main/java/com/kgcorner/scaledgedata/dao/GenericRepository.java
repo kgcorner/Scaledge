@@ -72,7 +72,13 @@ public class GenericRepository<T extends Serializable> implements ScaledgeReposi
      */
     @Override
     public T create(T document) {
-        template.save(document);
+        template.insert(document);
         return  document;
+    }
+
+    @Override
+    public T update(T document) {
+        template.save(document);
+        return document;
     }
 }

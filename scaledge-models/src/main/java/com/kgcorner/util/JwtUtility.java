@@ -35,14 +35,23 @@ public class JwtUtility {
         }
     }
 
-    public static Object validateToken(String salt, String token) {
+    public static boolean validateToken(String salt, String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(salt);
-            JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
-            DecodedJWT jwt = verifier.verify(token);
-            return jwt.getClaim("user").asString();
+            JWT.require(algorithm).withIssuer(ISSUER).build();
+            return true;
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            return false;
+        }
+        catch (JWTVerificationException x) {
+            return false;
+        }
+    }
+
+    public static String getClaim(String key, String token) {
+        try {
+            DecodedJWT decodedJwt = JWT.decode(token);
+            return decodedJwt.getClaim(key).asString();
         }
         catch (JWTVerificationException x) {
             throw new IllegalArgumentException(x.getMessage());

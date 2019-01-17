@@ -89,4 +89,8 @@ public class User extends UserPreview {
     public void setImages(List<ImagePreview> images) {
         this.images = images;
     }
+
+    public UserPreview extractUserPreview() {
+        return new UserPreview(id, name);
+    }
 }

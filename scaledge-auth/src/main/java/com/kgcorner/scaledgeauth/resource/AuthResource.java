@@ -3,7 +3,10 @@ package com.kgcorner.scaledgeauth.resource;
 import com.kgcorner.models.Token;
 import com.kgcorner.models.User;
 import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
+import com.kgcorner.scaledgeauth.exception.InvalidRefreshTokenException;
+import com.kgcorner.scaledgeauth.exception.TokenVerificationFailedException;
 import com.kgcorner.scaledgeauth.service.AuthenticationService;
+import com.kgcorner.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AuthResource {
+public class AuthResource extends ExceptionAware {
     static final String AUTHORIZATION_TOKEN = "Authorization";
     static final String REFRESH_TOKEN = "refresh-token";
 
@@ -25,14 +28,10 @@ public class AuthResource {
      * @param authorizationToken
      * @return
      */
-    @GetMapping("/login")
+    @GetMapping(value = "/login", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Token login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
-        try {
-            return authenticationService.getToken(authorizationToken);
-        } catch (AuthenticationFailedException e) {
-            return null;
-        }
+    Token login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) throws AuthenticationFailedException {
+        return authenticationService.getToken(authorizationToken);
     }
 
     /**
@@ -40,10 +39,11 @@ public class AuthResource {
      * @param authorizationToken
      * @return User holding the bearer token
      */
-    @GetMapping("/validates")
+    @GetMapping(value = "/validates", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    User validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
-        return null;
+    User validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken)
+            throws TokenVerificationFailedException {
+        return authenticationService.validateJwt(authorizationToken);
     }
 
     /**
@@ -51,9 +51,9 @@ public class AuthResource {
      * @param refreshToken
      * @return
      */
-    @GetMapping("/refresh")
+    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Token refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken){
-        return null;
+    Token refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken) throws InvalidRefreshTokenException {
+        return authenticationService.refreshToken(refreshToken);
     }
 }
