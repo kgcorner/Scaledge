@@ -18,6 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 				"rerun:target/cucumber-reports/rerun.txt"
 		}
 )
-public class ScaledgeAuthApplicationTests {
+public class ScaledgeAuthApplicationTest {
 }
 

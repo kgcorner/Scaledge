@@ -4,6 +4,7 @@ import com.kgcorner.models.Token;
 import com.kgcorner.scaledgeauth.AuthServiceTestConf;
 import com.kgcorner.scaledgeauth.Constants;
 import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
@@ -38,19 +40,42 @@ public class AuthenticationServiceSteps {
         headers.set("Authorization", basicToken);
         String url = Constants.HOST + LOGIN_URL;
         HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-        loginResponseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Token.class);
+        try {
+            loginResponseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, Token.class);
+        } catch (HttpClientErrorException x) {
+            loginResponseEntity = new ResponseEntity(x.getStatusCode());
+        }
     }
 
-    @Then("^server should return with status code '(\\d+)' and Token object as json$")
+    @Then("^server should return with status code '(\\d+)'.*$")
     public void serverShouldReturnWithStatusCodeAndTokenObjectAsJson(int status) throws Throwable {
         Assert.assertEquals("Status on login is not matching", status,
                 loginResponseEntity.getStatusCode().value());
-        Token token = loginResponseEntity.getBody();
-        Assert.assertNotNull("Token received on login is null", token);
-        Assert.assertNotNull("Access Token received on login is null", token.getAccessToken());
-        Assert.assertNotNull("Refresh Token received on login is null", token.getRefreshToken());
-        Assert.assertNotNull("Expire date received on login is null", token.getExpiresOn());
-        Assert.assertTrue("Expire date is past date",
-                (new Date().getTime() - token.getExpiresOn().getTime()) < 0);
+        if(status == 200) {
+            Token token = loginResponseEntity.getBody();
+            Assert.assertNotNull("Token received on login is null", token);
+            Assert.assertNotNull("Access Token received on login is null", token.getAccessToken());
+            Assert.assertNotNull("Refresh Token received on login is null", token.getRefreshToken());
+            Assert.assertNotNull("Expire date received on login is null", token.getExpiresOn());
+            Assert.assertTrue("Expire date is past date",
+                    (new Date().getTime() - token.getExpiresOn().getTime()) < 0);
+        }
+    }
+
+    @And("^user usage non-basic token$")
+    public void userUsageNonBasicToken() throws Throwable {
+        basicToken = basicToken.replace("Basic ","Non_basic ");
+    }
+
+    @And("^user usage empty basic token$")
+    public void userUsageEmptyBasicToken() throws Throwable {
+        basicToken = "Basic ";
+    }
+
+    @And("^user usage basic token in invalid format$")
+    public void userUsageBasicTokenInInvalidFormat() throws Throwable {
+        basicToken = "asadjsljdlfk";
+        basicToken = new String(Base64.getEncoder().encode(basicToken.getBytes()));
+        basicToken = "Basic " + basicToken;
     }
 }
