@@ -26,8 +26,10 @@ public class JwtUtility {
                     .withIssuedAt(Date.from(now))
                     .withIssuer(ISSUER)
                     .withExpiresAt(Date.from(now.plusSeconds(expiresInSeconds)));
-            for(Map.Entry<String, String> entry : claim.entrySet()) {
-                jwtBuilder.withClaim(entry.getKey(), entry.getValue());
+            if(claim != null) {
+                for (Map.Entry<String, String> entry : claim.entrySet()) {
+                    jwtBuilder.withClaim(entry.getKey(), entry.getValue());
+                }
             }
             return jwtBuilder.sign(algorithm);
         } catch (UnsupportedEncodingException e) {
@@ -38,12 +40,15 @@ public class JwtUtility {
     public static boolean validateToken(String salt, String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(salt);
-            JWT.require(algorithm).withIssuer(ISSUER).build();
+            JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
+            verifier.verify(token);
             return true;
         } catch (UnsupportedEncodingException e) {
             return false;
         }
         catch (JWTVerificationException x) {
+            return false;
+        } catch (Exception x) {
             return false;
         }
     }
