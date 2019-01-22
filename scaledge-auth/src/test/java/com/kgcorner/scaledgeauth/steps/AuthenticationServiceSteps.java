@@ -29,6 +29,7 @@ import java.util.Date;
 public class AuthenticationServiceSteps {
     private RestTemplate restTemplate = new RestTemplate();
     private static final String LOGIN_URL = "/login";
+    private static final String REFRESH_URL = "/refresh?refresh-token=%s";
     private static final String VALIDATE_URL = "/validates";
     private String basicToken = null;
     private ResponseEntity<Token> loginResponseEntity;
@@ -37,6 +38,7 @@ public class AuthenticationServiceSteps {
 
     @Autowired
     private ApplicationProperties properties;
+    private ResponseEntity<Token> refreshTokenResponseEntity;
 
     @Given("^user exists in system with username \"([^\"]*)\" and password \"([^\"]*)\"$")
     public void userExistsInSystemWithUsernameAndPassword(String username, String password) throws Throwable {
@@ -151,6 +153,41 @@ public class AuthenticationServiceSteps {
             userPreviewResponseEntity = restTemplate.exchange(url, HttpMethod.GET, httpEntity, UserPreview.class);
         } catch (HttpClientErrorException x) {
             userPreviewResponseEntity = new ResponseEntity(x.getStatusCode());
+        }
+    }
+
+    @When("^User requests to refresh token$")
+    public void userRequestsToRefreshToken() throws Throwable {
+        String refreshToken =loginResponseEntity.getBody().getRefreshToken();
+        String url = Constants.HOST + REFRESH_URL;
+        url = String.format(url, refreshToken);
+        refreshTokenResponseEntity = restTemplate.getForEntity(url, Token.class);
+    }
+
+    @Then("^server should return new token and status '(\\d+)'$")
+    public void serverShouldReturnNewTokenAndStatus(int status) throws Throwable {
+        Assert.assertEquals("Status is not matching for refresh token", status,
+                refreshTokenResponseEntity.getStatusCode().value());
+        if(status == 200) {
+            Token newToken = refreshTokenResponseEntity.getBody();
+            Token oldToken = loginResponseEntity.getBody();
+            Assert.assertNotEquals("refreshed access token is same as old one",
+                    newToken.getAccessToken().equals(oldToken.getAccessToken()));
+            Assert.assertNotEquals("refreshed refresh token is same as old one",
+                    newToken.getRefreshToken().equals(oldToken.getRefreshToken()));
+            Assert.assertNotEquals("refreshed expiresOn value of new token is same as old one",
+                    newToken.getExpiresOn().equals(oldToken.getExpiresOn()));
+        }
+    }
+
+    @When("^User requests to refresh token using invalid token$")
+    public void userRequestsToRefreshTokenUsingInvalidToken() throws Throwable {
+        String url = Constants.HOST + REFRESH_URL;
+        url = String.format(url, "invalid refresh token");
+        try {
+            refreshTokenResponseEntity = restTemplate.getForEntity(url, Token.class);
+        } catch (HttpClientErrorException x) {
+            refreshTokenResponseEntity = new ResponseEntity<>(x.getStatusCode());
         }
     }
 }
