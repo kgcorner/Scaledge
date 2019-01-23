@@ -7,7 +7,7 @@ services:
 
 before_install:
   - docker pull kumargauravgupta3/scaledge:scaledge-test
-  - docker run -d -p 127.0.0.1:27017:27017 kumargauravgupta3/scaledge
+  - docker run -d -p 127.0.0.1:27017:27017 kumargauravgupta3/scaledge:scaledge-test
 
 script:
   - mvn clean install
