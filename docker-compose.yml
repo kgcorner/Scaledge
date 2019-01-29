@@ -1,0 +1,56 @@
+version: '2.1'
+
+services:
+  eureka:
+    container_name: eureka
+    image: scaledge-eureka
+    ports:
+      - '8761:8761'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  mongo:
+    container_name: mongo
+    image: scaledge-db
+
+  config:
+    container_name: config
+    image: scaledge-config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/scaledge-auth/default"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    links:
+      - eureka
+    depends_on:
+      eureka:
+        condition: service_healthy
+  auth:
+    container_name: auth
+    image: scaledge-auth
+    links:
+      - config
+      - eureka
+      - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    depends_on:
+      config:
+        condition: service_healthy
+  api:
+    container_name: api
+    image: scaledge-api
+    links:
+    - config
+    - eureka
+    depends_on:
+      auth:
+        condition: service_healthy
+    ports:
+    - '6500:8080'     
