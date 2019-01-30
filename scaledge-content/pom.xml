@@ -51,7 +51,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<dockerHost>https://192.168.99.100:2376</dockerHost>
 					<imageName>scaledge-content</imageName>
 					<baseImage>adoptopenjdk/openjdk11</baseImage>
 					<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>

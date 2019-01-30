@@ -49,7 +49,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <dockerHost>https://192.168.99.100:2376</dockerHost>
                     <imageName>${docker.name}</imageName>
                     <dockerDirectory>${project.build.directory}/docker</dockerDirectory>
                 </configuration>
