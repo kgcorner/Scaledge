@@ -34,6 +34,12 @@ public class AuthResource extends ExceptionAware {
         return authenticationService.getToken(authorizationToken);
     }
 
+    @GetMapping(value = "/health", produces = Constants.PRODUCES_APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.OK)
+    String getHealth() {
+        return "Healthy";
+    }
+
     /**
      * Validates bearer token given by a user
      * @param authorizationToken
