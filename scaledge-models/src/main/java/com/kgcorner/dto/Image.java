@@ -1,14 +1,10 @@
-package com.kgcorner.models;
+package com.kgcorner.dto;
 
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Document
+
 public class Image extends ImagePreview {
 
     private List<String> tags;

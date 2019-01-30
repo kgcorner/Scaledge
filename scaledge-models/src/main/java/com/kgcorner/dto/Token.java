@@ -1,4 +1,4 @@
-package com.kgcorner.models;
+package com.kgcorner.dto;
 
 import java.util.Date;
 

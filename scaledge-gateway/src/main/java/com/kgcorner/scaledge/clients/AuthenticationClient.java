@@ -1,7 +1,7 @@
 package com.kgcorner.scaledge.clients;
 
-import com.kgcorner.models.Token;
-import com.kgcorner.models.User;
+import com.kgcorner.dto.Token;
+import com.kgcorner.dto.User;
 import com.kgcorner.util.Constants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

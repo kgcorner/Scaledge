@@ -1,4 +1,4 @@
-package com.kgcorner.models;
+package com.kgcorner.dto;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;

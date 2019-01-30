@@ -1,8 +1,4 @@
-package com.kgcorner.models;
-
-import org.springframework.data.annotation.Id;
-
-import java.io.Serializable;
+package com.kgcorner.dto;
 
 public class Login extends BaseModel {
 

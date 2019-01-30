@@ -1,9 +1,8 @@
 package com.kgcorner.scaledgeauth.service;
 
-import com.kgcorner.models.Login;
-import com.kgcorner.models.Token;
-import com.kgcorner.models.User;
-import com.kgcorner.models.UserPreview;
+import com.kgcorner.dto.Login;
+import com.kgcorner.dto.Token;
+import com.kgcorner.dto.User;
 import com.kgcorner.scaledgeauth.ApplicationProperties;
 import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
 import com.kgcorner.scaledgeauth.exception.InvalidRefreshTokenException;

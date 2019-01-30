@@ -1,4 +1,4 @@
-package com.kgcorner.models;
+package com.kgcorner.dto;
 
 public class UserPreview extends BaseModel {
 

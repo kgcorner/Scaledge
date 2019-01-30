@@ -1,11 +1,9 @@
-package com.kgcorner.models;
-
-import org.springframework.data.annotation.Id;
+package com.kgcorner.dto;
 
 import java.io.Serializable;
 
 public class BaseModel implements Serializable {
-    @Id
+
     protected String id;
 
     public String getId() {

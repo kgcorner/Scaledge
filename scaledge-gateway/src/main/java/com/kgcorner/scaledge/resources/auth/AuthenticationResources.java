@@ -1,7 +1,7 @@
 package com.kgcorner.scaledge.resources.auth;
 
-import com.kgcorner.models.Token;
-import com.kgcorner.models.User;
+import com.kgcorner.dto.Token;
+import com.kgcorner.dto.User;
 import com.kgcorner.scaledge.services.AuthService;
 import com.kgcorner.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;

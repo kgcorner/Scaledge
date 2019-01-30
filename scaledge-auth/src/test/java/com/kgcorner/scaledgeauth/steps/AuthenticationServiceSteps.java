@@ -1,13 +1,12 @@
 package com.kgcorner.scaledgeauth.steps;
 
-import com.kgcorner.models.Token;
-import com.kgcorner.models.UserPreview;
+import com.kgcorner.dto.Token;
+import com.kgcorner.dto.UserPreview;
 import com.kgcorner.scaledgeauth.ApplicationProperties;
 import com.kgcorner.scaledgeauth.AuthServiceTestConf;
 import com.kgcorner.scaledgeauth.Constants;
 import com.kgcorner.util.GsonUtil;
 import com.kgcorner.util.JwtUtility;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
