@@ -1,12 +1,15 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledgeusers.entity;
 
+import com.kgcorner.scaledge.previewobjects.ImagePreview;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
+import com.kgcorner.scaledgedata.models.BaseModel;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Document
-public class User extends UserPreview {
+public class User extends BaseModel {
 
     private String aboutDetails;
     private List<UserPreview> followers;
@@ -17,6 +20,7 @@ public class User extends UserPreview {
     private Date joinedOn;
     private Date lastSeen;
     private String refreshToken;
+    private String name;
 
     public String getAboutDetails() {
         return aboutDetails;
@@ -92,5 +96,13 @@ public class User extends UserPreview {
 
     public UserPreview extractUserPreview() {
         return new UserPreview(id, name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

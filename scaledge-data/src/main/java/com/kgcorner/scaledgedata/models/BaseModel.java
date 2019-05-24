@@ -1,4 +1,4 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledgedata.models;
 
 import org.springframework.data.annotation.Id;
 

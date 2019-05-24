@@ -1,8 +1,9 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledge.previewobjects;
 
-public class UserPreview extends BaseModel {
+public class UserPreview {
 
-    protected String name;
+    private String name;
+    private String id;
 
     public UserPreview(){}
     public UserPreview(String id, String name) {

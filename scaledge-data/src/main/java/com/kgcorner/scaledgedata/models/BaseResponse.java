@@ -1,4 +1,4 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledgedata.models;
 
 public class BaseResponse {
     public enum RESPONSE_TYPE {

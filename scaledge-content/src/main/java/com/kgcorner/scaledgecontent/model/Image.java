@@ -1,6 +1,8 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledgecontent.model;
 
 
+import com.kgcorner.scaledge.previewobjects.ImagePreview;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;

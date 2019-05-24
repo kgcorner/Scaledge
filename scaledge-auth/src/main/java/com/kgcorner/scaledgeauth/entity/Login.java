@@ -1,10 +1,13 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledgeauth.entity;
+
+import com.kgcorner.dto.UserPreview;
+import com.kgcorner.scaledgedata.models.BaseModel;
 
 public class Login extends BaseModel {
 
     private String userName;
     private String password;
-    private User user;
+    private UserPreview user;
 
     public String getUserName() {
         return userName;
@@ -22,11 +25,11 @@ public class Login extends BaseModel {
         this.password = password;
     }
 
-    public User getUser() {
+    public UserPreview getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserPreview user) {
         this.user = user;
     }
 

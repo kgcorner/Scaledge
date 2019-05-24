@@ -1,4 +1,4 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledgeauth.entity;
 
 import java.util.Date;
 

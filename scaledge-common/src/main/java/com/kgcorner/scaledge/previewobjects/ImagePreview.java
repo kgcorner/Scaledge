@@ -1,4 +1,4 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledge.previewobjects;
 
 
 public class ImagePreview extends BaseModel{
