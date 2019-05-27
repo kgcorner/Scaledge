@@ -1,4 +1,4 @@
-package com.kgcorner.scaledgeusers.entity;
+package com.kgcorner.scaledgeusers.dao.entity;
 
 import com.kgcorner.scaledge.previewobjects.ImagePreview;
 import com.kgcorner.scaledge.previewobjects.UserPreview;
