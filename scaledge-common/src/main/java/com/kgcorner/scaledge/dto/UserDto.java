@@ -1,12 +1,19 @@
-package com.kgcorner.dto;
+package com.kgcorner.scaledge.dto;
+
+/*
+Description : User transfer object
+Author: kumar
+Created on : 25/5/19
+*/
+
+import com.kgcorner.scaledge.previewobjects.ImagePreview;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
-public class User extends UserPreview {
-
+public class UserDto {
     private String aboutDetails;
     private List<UserPreview> followers;
     private List<UserPreview> followings;
@@ -16,6 +23,8 @@ public class User extends UserPreview {
     private Date joinedOn;
     private Date lastSeen;
     private String refreshToken;
+    private String name;
+    private String id;
 
     public String getAboutDetails() {
         return aboutDetails;
@@ -91,5 +100,21 @@ public class User extends UserPreview {
 
     public UserPreview extractUserPreview() {
         return new UserPreview(id, name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

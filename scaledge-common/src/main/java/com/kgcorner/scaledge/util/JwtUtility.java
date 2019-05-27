@@ -1,4 +1,4 @@
-package com.kgcorner.util;
+package com.kgcorner.scaledge.util;
 
 
 
@@ -20,21 +20,17 @@ public class JwtUtility {
 
     public static String createJWTToken(String salt, Map<String, String> claim, int expiresInSeconds) {
         Instant now = Instant.now();
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(salt);
-            JWTCreator.Builder jwtBuilder = JWT.create()
-                    .withIssuedAt(Date.from(now))
-                    .withIssuer(ISSUER)
-                    .withExpiresAt(Date.from(now.plusSeconds(expiresInSeconds)));
-            if(claim != null) {
-                for (Map.Entry<String, String> entry : claim.entrySet()) {
-                    jwtBuilder.withClaim(entry.getKey(), entry.getValue());
-                }
+        Algorithm algorithm = Algorithm.HMAC256(salt);
+        JWTCreator.Builder jwtBuilder = JWT.create()
+                .withIssuedAt(Date.from(now))
+                .withIssuer(ISSUER)
+                .withExpiresAt(Date.from(now.plusSeconds(expiresInSeconds)));
+        if(claim != null) {
+            for (Map.Entry<String, String> entry : claim.entrySet()) {
+                jwtBuilder.withClaim(entry.getKey(), entry.getValue());
             }
-            return jwtBuilder.sign(algorithm);
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e.getMessage());
         }
+        return jwtBuilder.sign(algorithm);
     }
 
     public static boolean validateToken(String salt, String token) {
@@ -43,10 +39,7 @@ public class JwtUtility {
             JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
             verifier.verify(token);
             return true;
-        } catch (UnsupportedEncodingException e) {
-            return false;
-        }
-        catch (JWTVerificationException x) {
+        } catch (JWTVerificationException x) {
             return false;
         } catch (Exception x) {
             return false;

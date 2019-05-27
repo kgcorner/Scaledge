@@ -47,7 +47,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.kgcorner</groupId>
-			<artifactId>scaledge-models</artifactId>
+			<artifactId>scaledge-common</artifactId>
 			<version>${product.version}</version>
 		</dependency>
 

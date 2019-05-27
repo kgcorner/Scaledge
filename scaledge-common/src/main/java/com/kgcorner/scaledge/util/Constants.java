@@ -1,4 +1,4 @@
-package com.kgcorner.util;
+package com.kgcorner.scaledge.util;
 
 public final class Constants {
     private Constants() {}

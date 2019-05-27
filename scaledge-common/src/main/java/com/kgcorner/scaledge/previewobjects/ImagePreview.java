@@ -1,7 +1,7 @@
 package com.kgcorner.scaledge.previewobjects;
 
 
-public class ImagePreview extends BaseModel{
+public class ImagePreview {
 
     protected String description;
     protected String link;

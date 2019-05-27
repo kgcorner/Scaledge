@@ -18,4 +18,12 @@ public class BaseModel implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
+
+    /**
+     * Checks whether model is valid or not
+     * @return
+     */
+    public boolean isValid() {
+        return true;
+    }
 }

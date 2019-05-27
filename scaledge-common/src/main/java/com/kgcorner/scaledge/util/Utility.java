@@ -1,4 +1,4 @@
-package com.kgcorner.util;
+package com.kgcorner.scaledge.util;
 
 import java.time.Instant;
 import java.util.Date;

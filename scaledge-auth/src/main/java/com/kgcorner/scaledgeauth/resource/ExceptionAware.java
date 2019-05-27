@@ -1,9 +1,10 @@
 package com.kgcorner.scaledgeauth.resource;
 
-import com.kgcorner.dto.BaseResponse;
+
 import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
 import com.kgcorner.scaledgeauth.exception.InvalidRefreshTokenException;
 import com.kgcorner.scaledgeauth.exception.TokenVerificationFailedException;
+import com.kgcorner.scaledgedata.models.BaseResponse;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

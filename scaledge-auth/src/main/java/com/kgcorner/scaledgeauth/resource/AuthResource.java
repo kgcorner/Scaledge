@@ -1,19 +1,18 @@
 package com.kgcorner.scaledgeauth.resource;
 
-import com.kgcorner.dto.Token;
-import com.kgcorner.dto.User;
+
+import com.kgcorner.scaledge.dto.Token;
+import com.kgcorner.scaledge.dto.UserDto;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
+import com.kgcorner.scaledge.util.Constants;
+import com.kgcorner.scaledgeauth.dao.entity.Login;
 import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
 import com.kgcorner.scaledgeauth.exception.InvalidRefreshTokenException;
 import com.kgcorner.scaledgeauth.exception.TokenVerificationFailedException;
 import com.kgcorner.scaledgeauth.service.AuthenticationService;
-import com.kgcorner.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthResource extends ExceptionAware {
@@ -47,7 +46,7 @@ public class AuthResource extends ExceptionAware {
      */
     @GetMapping(value = "/validates", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    User validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken)
+    UserPreview validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken)
             throws TokenVerificationFailedException {
         return authenticationService.validateJwt(authorizationToken);
     }
@@ -61,5 +60,19 @@ public class AuthResource extends ExceptionAware {
     @ResponseStatus(HttpStatus.OK)
     Token refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken) throws InvalidRefreshTokenException {
         return authenticationService.refreshToken(refreshToken);
+    }
+
+    /**
+     * Register
+     * @param login
+     * @return
+     */
+    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
+        consumes = Constants.PRODUCES_APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.OK)
+    Login registerLogin(@RequestBody Login login) throws InvalidRefreshTokenException {
+        login = authenticationService.registerNewLogin(login);
+        login.setPassword("");
+        return  login;
     }
 }

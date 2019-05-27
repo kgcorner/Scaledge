@@ -1,17 +1,20 @@
 package com.kgcorner.scaledgeauth.service;
 
-import com.kgcorner.dto.Login;
-import com.kgcorner.dto.Token;
-import com.kgcorner.dto.User;
+
+import com.kgcorner.scaledge.dto.Token;
+import com.kgcorner.scaledge.dto.UserDto;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
+import com.kgcorner.scaledge.util.GsonUtil;
+import com.kgcorner.scaledge.util.JwtUtility;
+import com.kgcorner.scaledge.util.Strings;
+import com.kgcorner.scaledge.util.Utility;
 import com.kgcorner.scaledgeauth.ApplicationProperties;
+import com.kgcorner.scaledgeauth.dao.entity.Login;
+import com.kgcorner.scaledgeauth.dao.repo.LoginDataRepo;
 import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
 import com.kgcorner.scaledgeauth.exception.InvalidRefreshTokenException;
 import com.kgcorner.scaledgeauth.exception.TokenVerificationFailedException;
 import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
-import com.kgcorner.util.GsonUtil;
-import com.kgcorner.util.JwtUtility;
-import com.kgcorner.util.Strings;
-import com.kgcorner.util.Utility;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +29,15 @@ public class AuthenticationService {
     private static final String USER_CLAIM_KEY = "user";
     private static final String BEARER_TOKEN_TYPE = "Bearer ";
     private static final Logger LOGGER = Logger.getLogger(AuthenticationService.class);
+
     @Autowired
-    private ScaledgeRepository<User> userRepository;
+    private LoginDataRepo dataRepo;
 
     @Autowired
     private ApplicationProperties properties;
 
     @Autowired
-    private ScaledgeRepository<Login> loginRepository;
+    private LoginDataRepo loginRepository;
 
     /**
      * Returns @{@link Token} if token is valid
@@ -55,30 +59,21 @@ public class AuthenticationService {
         }
         String userName = combo[0];
         String password = combo[1];
-        Login login = loginRepository.getByKey(Login.getUserNameKeyName(), userName, Login.class);
-        if(login == null) {
+        Login login = dataRepo.getByKey(Login.USER_NAME, userName, Login.class);
+        if(login == null || !Strings.isHashMatching(password, login.getPassword()))
             throw new AuthenticationFailedException();
-        }
-        if(!login.getPassword().equals(password)) {
-            throw new AuthenticationFailedException();
-        }
         String secret = properties.getAuthSecretKey();
         int expiresInSecond = properties.getBearerTokenExpiresInSecond();
         int refreshTokenLength = properties.getRefreshTokenLength();
-        User userPreview = login.getUser();
-        String userJson = GsonUtil.getGson().toJson(userPreview);
+        UserPreview user = login.getUser();
+        String userJson = GsonUtil.getGson().toJson(user);
         Map<String, String> claims = new HashMap<>();
         claims.put(USER_CLAIM_KEY, userJson);
         String jwtToken = JwtUtility.createJWTToken(secret, claims, expiresInSecond);
         String refreshToken = Strings.generateRandomString(refreshTokenLength);
-        User user = userRepository.getById(userPreview.getId(), User.class);
-        if(user == null) {
-            LOGGER.warn("No user associated with login:username" + userName);
-            throw new AuthenticationFailedException();
-        }
-        user.setRefreshToken(refreshToken);
-        userRepository.update(user);
         Token tokenObject = new Token( jwtToken, refreshToken, Utility.getTimeAfterSeconds(expiresInSecond));
+        login.setRefreshToken(refreshToken);
+        dataRepo.update(login);
         return tokenObject;
     }
 
@@ -88,7 +83,7 @@ public class AuthenticationService {
      * @return user embedded in the token
      * @throws TokenVerificationFailedException if token verification fails
      */
-    public User validateJwt(String token) throws TokenVerificationFailedException {
+    public UserPreview validateJwt(String token) throws TokenVerificationFailedException {
         if(!token.toLowerCase().startsWith(BEARER_TOKEN_TYPE.toLowerCase())) {
             throw new IllegalArgumentException("invalid token provided");
         }
@@ -96,7 +91,7 @@ public class AuthenticationService {
         String secret = properties.getAuthSecretKey();
         if(JwtUtility.validateToken(secret, token)) {
             String userClaim = JwtUtility.getClaim(USER_CLAIM_KEY, token);
-            return GsonUtil.getGson().fromJson(userClaim, User.class);
+            return GsonUtil.getGson().fromJson(userClaim, UserPreview.class);
         } else {
             throw new TokenVerificationFailedException();
         }
@@ -109,22 +104,34 @@ public class AuthenticationService {
      * @throws InvalidRefreshTokenException if refresh token is not associated with any user
      */
     public Token refreshToken(String refreshToken) throws InvalidRefreshTokenException {
-        User user = userRepository.getByKey("refreshToken", refreshToken, User.class);
-        if(user == null) {
+        Login login = dataRepo.getByKey(Login.REFRESH_TOKEN, refreshToken, Login.class);
+        if(login == null) {
             throw new InvalidRefreshTokenException();
         }
         String secret = properties.getAuthSecretKey();
         int expiresInSecond = properties.getBearerTokenExpiresInSecond();
         int refreshTokenLength = properties.getRefreshTokenLength();
         Map<String, String> claims = new HashMap<>();
-        claims.put(USER_CLAIM_KEY, GsonUtil.getGson().toJson(user.extractUserPreview()));
+        claims.put(USER_CLAIM_KEY, GsonUtil.getGson().toJson(login.getUser()));
         String jwtToken = JwtUtility.createJWTToken(secret, claims, expiresInSecond);
         refreshToken = Strings.generateRandomString(refreshTokenLength);
-        user.setRefreshToken(refreshToken);
-        userRepository.update(user);
+        login.setRefreshToken(refreshToken);
+        dataRepo.update(login);
         Token tokenObject = new Token( jwtToken, refreshToken, Utility.getTimeAfterSeconds(expiresInSecond));
         return tokenObject;
     }
 
+    /**
+     * Register and returns a new login
+     * @param login {@link Login} object
+     * @return created login object
+     */
+    public Login registerNewLogin(Login login) {
+        if(!login.isValid()) {
+            throw new IllegalArgumentException("data is not valid");
+        }
+        login.setPassword(Strings.getHash(login.getPassword()));
+        return dataRepo.create(login);
+    }
 
 }
