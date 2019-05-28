@@ -66,7 +66,7 @@ public class AuthResource extends ExceptionAware {
      * @param login
      * @return
      */
-    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
+    @PostMapping(value = "/register", produces = Constants.PRODUCES_APPLICATION_JSON,
         consumes = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
     Login registerLogin(@RequestBody Login login) {
