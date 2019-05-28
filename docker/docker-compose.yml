@@ -1,0 +1,34 @@
+eureka:
+  image: scaledge-eureka
+  ports:
+    - "8761:8761"
+config:
+  image: scaledge-config
+  ports:
+    - "8888:8888"
+  links:
+    - discovery
+#gateway:
+#  image: scaledge-api
+#  ports:
+#    - "10000:10000"
+#  links:
+#    - discovery
+#    - configserver
+#    - auth
+#    - content
+#user:
+#  image: scaledge-users
+#  links:
+#    - discovery
+#    - configserver
+#auth:
+#  image: scaledge-auth
+#  links:
+#    - discovery
+#    - configserver
+#content:
+#  image: scaledge-content
+#  links:
+#    - discovery
+#    - configserver

@@ -2,19 +2,19 @@ package com.kgcorner.scaledge.dto;
 
 import java.util.Date;
 
-public class Token {
+public class TokenDto {
 
     private String accessToken;
     private String refreshToken;
     private Date expiresOn;
 
-    public Token(String jwtToken, String refreshToken, Date expiresOn) {
+    public TokenDto(String jwtToken, String refreshToken, Date expiresOn) {
         this.accessToken = jwtToken;
         this.refreshToken = refreshToken;
         this.expiresOn = expiresOn;
     }
 
-    public Token() {
+    public TokenDto() {
     }
 
     public String getAccessToken() {

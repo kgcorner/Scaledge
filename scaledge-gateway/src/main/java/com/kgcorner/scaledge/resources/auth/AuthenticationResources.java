@@ -1,16 +1,15 @@
 package com.kgcorner.scaledge.resources.auth;
 
-import com.kgcorner.dto.Token;
-import com.kgcorner.dto.User;
+
+import com.kgcorner.scaledge.dto.LoginDto;
+import com.kgcorner.scaledge.dto.TokenDto;
+import com.kgcorner.scaledge.dto.UserDto;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
 import com.kgcorner.scaledge.services.AuthService;
-import com.kgcorner.util.Constants;
+import com.kgcorner.scaledge.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationResources {
@@ -27,7 +26,7 @@ public class AuthenticationResources {
      */
     @GetMapping(value = "/login", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Token login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
+    TokenDto login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
         return authService.login(authorizationToken);
     }
 
@@ -38,8 +37,12 @@ public class AuthenticationResources {
      */
     @GetMapping(value = "/validates", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    User validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
-        return authService.validateJwt(authorizationToken);
+    UserDto validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) {
+        UserPreview userPreview = authService.validateJwt(authorizationToken);
+        UserDto user = new UserDto();
+        user.setId(userPreview.getId());
+        user.setName(userPreview.getName());
+        return user;
     }
 
     /**
@@ -49,8 +52,21 @@ public class AuthenticationResources {
      */
     @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Token refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken) {
+    TokenDto refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken) {
         return authService.refreshToken(refreshToken);
     }
 
+    /**
+     * Register
+     * @param login
+     * @return
+     */
+    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
+        consumes = Constants.PRODUCES_APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.OK)
+    LoginDto registerLogin(@RequestBody LoginDto login) {
+        login = authService.registerNewLogin(login);
+        login.setPassword("");
+        return  login;
+    }
 }

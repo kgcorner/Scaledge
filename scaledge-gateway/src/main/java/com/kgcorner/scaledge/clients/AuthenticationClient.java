@@ -1,12 +1,13 @@
 package com.kgcorner.scaledge.clients;
 
-import com.kgcorner.dto.Token;
-import com.kgcorner.dto.User;
-import com.kgcorner.util.Constants;
+
+import com.kgcorner.scaledge.dto.LoginDto;
+import com.kgcorner.scaledge.dto.TokenDto;
+import com.kgcorner.scaledge.dto.UserDto;
+import com.kgcorner.scaledge.previewobjects.UserPreview;
+import com.kgcorner.scaledge.util.Constants;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Client for Sclaedge Authentication service
@@ -22,7 +23,7 @@ public interface AuthenticationClient {
      * @return
      */
     @GetMapping(value = "/login", produces = Constants.PRODUCES_APPLICATION_JSON)
-    Token login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken);
+    TokenDto login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken);
 
     /**
      * Validates the JWT token
@@ -30,7 +31,7 @@ public interface AuthenticationClient {
      * @return
      */
     @GetMapping(value = "/validates", produces = Constants.PRODUCES_APPLICATION_JSON)
-    User validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken);
+    UserPreview validateUser(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken);
 
     /**
      * Refreshes the jwt token
@@ -38,5 +39,9 @@ public interface AuthenticationClient {
      * @return
      */
     @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON)
-    Token refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken);
+    TokenDto refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken);
+
+    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
+        consumes = Constants.PRODUCES_APPLICATION_JSON)
+    LoginDto registerLogin(@RequestBody LoginDto login);
 }

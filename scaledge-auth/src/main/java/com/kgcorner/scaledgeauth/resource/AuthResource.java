@@ -1,8 +1,7 @@
 package com.kgcorner.scaledgeauth.resource;
 
 
-import com.kgcorner.scaledge.dto.Token;
-import com.kgcorner.scaledge.dto.UserDto;
+import com.kgcorner.scaledge.dto.TokenDto;
 import com.kgcorner.scaledge.previewobjects.UserPreview;
 import com.kgcorner.scaledge.util.Constants;
 import com.kgcorner.scaledgeauth.dao.entity.Login;
@@ -29,7 +28,7 @@ public class AuthResource extends ExceptionAware {
      */
     @GetMapping(value = "/login", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Token login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) throws AuthenticationFailedException {
+    TokenDto login(@RequestHeader(AUTHORIZATION_TOKEN) String authorizationToken) throws AuthenticationFailedException {
         return authenticationService.getToken(authorizationToken);
     }
 
@@ -58,7 +57,7 @@ public class AuthResource extends ExceptionAware {
      */
     @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Token refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken) throws InvalidRefreshTokenException {
+    TokenDto refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken) throws InvalidRefreshTokenException {
         return authenticationService.refreshToken(refreshToken);
     }
 
@@ -70,7 +69,7 @@ public class AuthResource extends ExceptionAware {
     @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
         consumes = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
-    Login registerLogin(@RequestBody Login login) throws InvalidRefreshTokenException {
+    Login registerLogin(@RequestBody Login login) {
         login = authenticationService.registerNewLogin(login);
         login.setPassword("");
         return  login;

@@ -1,8 +1,7 @@
 package com.kgcorner.scaledgeauth.service;
 
 
-import com.kgcorner.scaledge.dto.Token;
-import com.kgcorner.scaledge.dto.UserDto;
+import com.kgcorner.scaledge.dto.TokenDto;
 import com.kgcorner.scaledge.previewobjects.UserPreview;
 import com.kgcorner.scaledge.util.GsonUtil;
 import com.kgcorner.scaledge.util.JwtUtility;
@@ -14,7 +13,6 @@ import com.kgcorner.scaledgeauth.dao.repo.LoginDataRepo;
 import com.kgcorner.scaledgeauth.exception.AuthenticationFailedException;
 import com.kgcorner.scaledgeauth.exception.InvalidRefreshTokenException;
 import com.kgcorner.scaledgeauth.exception.TokenVerificationFailedException;
-import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,12 +38,12 @@ public class AuthenticationService {
     private LoginDataRepo loginRepository;
 
     /**
-     * Returns @{@link Token} if token is valid
+     * Returns @{@link TokenDto} if token is valid
      * @param token basic token including basic
-     * @return Token object containing bearer and refresh token
+     * @return TokenDto object containing bearer and refresh token
      * @throws AuthenticationFailedException if token contains invalid username and password
      */
-    public Token getToken(String token) throws AuthenticationFailedException {
+    public TokenDto getToken(String token) throws AuthenticationFailedException {
         if(!token.toLowerCase().startsWith("basic ")) {
             throw new IllegalArgumentException("invalid authentication token provided");
         }
@@ -71,10 +69,10 @@ public class AuthenticationService {
         claims.put(USER_CLAIM_KEY, userJson);
         String jwtToken = JwtUtility.createJWTToken(secret, claims, expiresInSecond);
         String refreshToken = Strings.generateRandomString(refreshTokenLength);
-        Token tokenObject = new Token( jwtToken, refreshToken, Utility.getTimeAfterSeconds(expiresInSecond));
+        TokenDto tokenDtoObject = new TokenDto( jwtToken, refreshToken, Utility.getTimeAfterSeconds(expiresInSecond));
         login.setRefreshToken(refreshToken);
         dataRepo.update(login);
-        return tokenObject;
+        return tokenDtoObject;
     }
 
     /**
@@ -100,10 +98,10 @@ public class AuthenticationService {
     /**
      * Refreshes given token by validating refresh token for given user
      * @param refreshToken refresh token
-     * @return newly created {@link Token}
+     * @return newly created {@link TokenDto}
      * @throws InvalidRefreshTokenException if refresh token is not associated with any user
      */
-    public Token refreshToken(String refreshToken) throws InvalidRefreshTokenException {
+    public TokenDto refreshToken(String refreshToken) throws InvalidRefreshTokenException {
         Login login = dataRepo.getByKey(Login.REFRESH_TOKEN, refreshToken, Login.class);
         if(login == null) {
             throw new InvalidRefreshTokenException();
@@ -117,8 +115,8 @@ public class AuthenticationService {
         refreshToken = Strings.generateRandomString(refreshTokenLength);
         login.setRefreshToken(refreshToken);
         dataRepo.update(login);
-        Token tokenObject = new Token( jwtToken, refreshToken, Utility.getTimeAfterSeconds(expiresInSecond));
-        return tokenObject;
+        TokenDto tokenDtoObject = new TokenDto( jwtToken, refreshToken, Utility.getTimeAfterSeconds(expiresInSecond));
+        return tokenDtoObject;
     }
 
     /**

@@ -27,7 +27,7 @@
         <module>scaledge-content</module>
         <module>scaledge-users</module>
         <module>scaledge-gateway</module>
-        <!--<module>scaledge-db-docker</module>-->
+        <module>scaledge-db-docker</module>
         <module>scaledge-common</module>
         <module>intetgration-test</module>
 
