@@ -11,6 +11,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
   mongo:
     container_name: mongo
     image: scaledge-db
@@ -28,6 +29,7 @@ services:
     depends_on:
       eureka:
         condition: service_healthy
+
   auth:
     container_name: auth
     image: scaledge-auth
@@ -42,9 +44,11 @@ services:
       retries: 5
     ports:
       - '9001:9001'
+      - '5005:5005'
     depends_on:
       config:
         condition: service_healthy
+
   api:
     container_name: api
     image: scaledge-api
