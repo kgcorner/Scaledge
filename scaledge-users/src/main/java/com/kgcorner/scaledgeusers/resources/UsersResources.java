@@ -6,10 +6,12 @@ Author: kumar
 Created on : 27/5/19
 */
 
+import com.kgcorner.scaledge.util.Constants;
 import com.kgcorner.scaledge.util.Strings;
 import com.kgcorner.scaledgeusers.dao.entity.User;
 import com.kgcorner.scaledgeusers.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,6 +26,12 @@ public class UsersResources extends UsersExceptionAware{
             throw new IllegalArgumentException("Invalid UserId");
         }
         return service.getUser(userId);
+    }
+
+    @GetMapping(value = "/health", produces = Constants.PRODUCES_APPLICATION_JSON)
+    @ResponseStatus(HttpStatus.OK)
+    String getHealth() {
+        return "Healthy";
     }
 
     /**

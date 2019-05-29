@@ -1,0 +1,37 @@
+package com.kgcorner.scaledge.services;
+
+/*
+Description : <Write is class Description>
+Author: kumar
+Created on : 28/5/19
+*/
+
+import com.kgcorner.scaledge.clients.UserServiceClient;
+import com.kgcorner.scaledge.dto.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserService {
+
+    @Autowired
+    private UserServiceClient client;
+
+    /**
+     * Registers a user
+     * @param user
+     * @return
+     */
+    public UserDto registerUser(UserDto user) {
+        return client.registerUser(user);
+    }
+
+    /**
+     * fetches given user
+     * @param userID
+     * @return
+     */
+    public UserDto getUser(String userID) {
+        return client.getUser(userID);
+    }
+}

@@ -1,11 +1,13 @@
 package com.kgcorner.scaledge.resources.auth;
 
 
+import com.kgcorner.scaledge.clients.UserServiceClient;
 import com.kgcorner.scaledge.dto.LoginDto;
 import com.kgcorner.scaledge.dto.TokenDto;
 import com.kgcorner.scaledge.dto.UserDto;
 import com.kgcorner.scaledge.previewobjects.UserPreview;
 import com.kgcorner.scaledge.services.AuthService;
+import com.kgcorner.scaledge.services.UserService;
 import com.kgcorner.scaledge.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,15 @@ public class AuthenticationResources {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private UserService userService;
+
+    public AuthenticationResources() {
+        System.out.println("***********************************************");
+        System.out.println("*Initializing Rest Controller*");
+        System.out.println("***********************************************");
+    }
 
     /**
      * Validates login and generates a bearer token
@@ -61,12 +72,23 @@ public class AuthenticationResources {
      * @param login
      * @return
      */
-    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
+    @PostMapping(value = "/register", produces = Constants.PRODUCES_APPLICATION_JSON,
         consumes = Constants.PRODUCES_APPLICATION_JSON)
     @ResponseStatus(HttpStatus.OK)
     LoginDto registerLogin(@RequestBody LoginDto login) {
-        login = authService.registerNewLogin(login);
-        login.setPassword("");
-        return  login;
+        if(login.isValid()) {
+            UserDto user = new UserDto();
+            user.setName(login.getUser().getName());
+            userService.registerUser(user);
+            login.getUser().setId(user.getId());
+            login = authService.registerNewLogin(login);
+            login.setPassword("");
+            return  login;
+        } else {
+            throw new IllegalArgumentException("invalid entry provided");
+        }
+
+
+
     }
 }

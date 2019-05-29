@@ -7,8 +7,9 @@ Created on : 27/5/19
 */
 
 import com.kgcorner.scaledge.previewobjects.UserPreview;
+import com.kgcorner.scaledge.util.Strings;
 
-public class LoginDto {
+public class LoginDto implements Dto{
     private String userName;
     private String password;
     private UserPreview user;
@@ -59,5 +60,12 @@ public class LoginDto {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !Strings.isNullOrEmpty(userName) &&
+            !Strings.isNullOrEmpty(password) &&
+            user != null;
     }
 }
