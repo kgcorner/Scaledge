@@ -20,7 +20,7 @@ services:
     container_name: config
     image: scaledge-config
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/scaledge-auth/default"]
+      test: ["CMD", "curl", "-f", "http://localhost:8888/scaledge-config/default"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -49,6 +49,25 @@ services:
       config:
         condition: service_healthy
 
+  user:
+    container_name: user
+    image: scaledge-users
+    links:
+      - config
+      - eureka
+      - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - '9002:9002'
+      - '5006:5006'
+    depends_on:
+      config:
+        condition: service_healthy
+
   api:
     container_name: api
     image: scaledge-api
@@ -56,7 +75,8 @@ services:
     - config
     - eureka
     depends_on:
-      auth:
+      config:
         condition: service_healthy
     ports:
-    - '6500:8080'     
+      - '8000:8080'
+      - '5007:5007'
