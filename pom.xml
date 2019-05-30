@@ -18,7 +18,7 @@
         <product.version>1.0-SNAPSHOT</product.version>
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
-        <debug.command> </debug.command>
+        <debug.command>" "</debug.command>
         <docker.image.name></docker.image.name>
     </properties>
 
@@ -176,7 +176,7 @@
                         <dockerHost>http://localhost:2375</dockerHost>
                         <imageName>${docker.image.name}</imageName>
                         <baseImage>adoptopenjdk/openjdk11</baseImage>
-                        <entryPoint>["java", ${debug.command},"-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                        <entryPoint>["java",${debug.command},"-jar", "/${project.build.finalName}.jar"]</entryPoint>
 
                         <resources>
                             <resource>

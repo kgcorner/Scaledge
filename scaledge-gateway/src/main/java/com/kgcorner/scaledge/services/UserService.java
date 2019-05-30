@@ -6,7 +6,7 @@ Author: kumar
 Created on : 28/5/19
 */
 
-import com.kgcorner.scaledge.clients.UserServiceClient;
+import com.kgcorner.scaledge.clients.UserClient;
 import com.kgcorner.scaledge.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     @Autowired
-    private UserServiceClient client;
+    private UserClient client;
 
     /**
      * Registers a user

@@ -15,7 +15,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<docker.image.name>scaledge-gateway</docker.image.name>
+		<docker.image.name>scaledge-api</docker.image.name>
 	</properties>
 
 	<dependencies>
@@ -75,6 +75,9 @@
 					<plugin>
 						<groupId>com.spotify</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<entryPoint>["java","-jar", "/${project.build.finalName}.jar"]</entryPoint>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

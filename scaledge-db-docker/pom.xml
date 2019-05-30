@@ -76,6 +76,9 @@
                     <plugin>
                         <groupId>com.spotify</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
+                        <configuration>
+                            <entryPoint>["java","-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -41,7 +41,7 @@ public interface AuthenticationClient {
     @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON)
     TokenDto refreshToken(@RequestParam(REFRESH_TOKEN) String refreshToken);
 
-    @GetMapping(value = "/refresh", produces = Constants.PRODUCES_APPLICATION_JSON,
+    @PostMapping(value = "/register", produces = Constants.PRODUCES_APPLICATION_JSON,
         consumes = Constants.PRODUCES_APPLICATION_JSON)
     LoginDto registerLogin(@RequestBody LoginDto login);
 }

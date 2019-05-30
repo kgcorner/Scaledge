@@ -1,7 +1,6 @@
 package com.kgcorner.scaledge.resources.auth;
 
 
-import com.kgcorner.scaledge.clients.UserServiceClient;
 import com.kgcorner.scaledge.dto.LoginDto;
 import com.kgcorner.scaledge.dto.TokenDto;
 import com.kgcorner.scaledge.dto.UserDto;
