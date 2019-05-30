@@ -12,6 +12,7 @@
     <artifactId>scaledge-db-docker</artifactId>
     <properties>
         <docker.name>scaledge-db</docker.name>
+        <docker.image.name>scaledge-db</docker.image.name>
     </properties>
 
     <build>
@@ -75,19 +76,6 @@
                     <plugin>
                         <groupId>com.spotify</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>default</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <imageName>${docker.name}</imageName>
-                            <dockerDirectory>${project.build.directory}/docker</dockerDirectory>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

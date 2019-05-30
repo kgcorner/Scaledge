@@ -15,7 +15,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-
+		<docker.image.name>scaledge-config</docker.image.name>
 	</properties>
 
 	<dependencies>
@@ -59,28 +59,6 @@
 					<plugin>
 						<groupId>com.spotify</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default</id>
-								<phase>package</phase>
-								<goals>
-									<goal>build</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<imageName>scaledge-config</imageName>
-							<baseImage>adoptopenjdk/openjdk11</baseImage>
-							<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-							<!-- copy the service's jar file from target into the root directory of the image -->
-							<resources>
-								<resource>
-									<targetPath>/</targetPath>
-									<directory>${project.build.directory}</directory>
-									<include>${project.build.finalName}.jar</include>
-								</resource>
-							</resources>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>

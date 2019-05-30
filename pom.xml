@@ -18,20 +18,10 @@
         <product.version>1.0-SNAPSHOT</product.version>
         <spring-cloud.version>Finchley.SR1</spring-cloud.version>
         <jaxb-api.version>2.3.0</jaxb-api.version>
+        <debug.command> </debug.command>
+        <docker.image.name></docker.image.name>
     </properties>
-    <modules>
-        <module>scaledge-eureka</module>
-        <module>scaledge-config</module>
-        <module>scaledge-data</module>
-        <module>scaledge-auth</module>
-        <module>scaledge-content</module>
-        <module>scaledge-users</module>
-        <module>scaledge-gateway</module>
-        <module>scaledge-db-docker</module>
-        <module>scaledge-common</module>
-        <module>intetgration-test</module>
 
-    </modules>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -128,6 +118,43 @@
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <id>test</id>
+            <activation>
+                <property>
+                    <name>test</name>
+                </property>
+            </activation>
+            <modules>
+                <module>scaledge-data</module>
+                <module>scaledge-auth</module>
+                <module>scaledge-content</module>
+                <module>scaledge-users</module>
+                <module>scaledge-gateway</module>
+                <module>scaledge-common</module>
+                <module>intetgration-test</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>docker</id>
+            <activation>
+                <property>
+                    <name>buildDocker</name>
+                </property>
+            </activation>
+            <modules>
+                <module>scaledge-data</module>
+                <module>scaledge-auth</module>
+                <module>scaledge-content</module>
+                <module>scaledge-users</module>
+                <module>scaledge-gateway</module>
+                <module>scaledge-common</module>
+                <module>intetgration-test</module>
+                <module>scaledge-eureka</module>
+                <module>scaledge-config</module>
+
+            </modules>
+        </profile>
     </profiles>
     <build>
         <pluginManagement>
@@ -136,6 +163,29 @@
                     <groupId>com.spotify</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
                     <version>1.2.0</version>
+                    <executions>
+                        <execution>
+                            <id>default</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <dockerHost>http://localhost:2375</dockerHost>
+                        <imageName>${docker.image.name}</imageName>
+                        <baseImage>adoptopenjdk/openjdk11</baseImage>
+                        <entryPoint>["java", ${debug.command},"-jar", "/${project.build.finalName}.jar"]</entryPoint>
+
+                        <resources>
+                            <resource>
+                                <targetPath>/</targetPath>
+                                <directory>${project.build.directory}</directory>
+                                <include>${project.build.finalName}.jar</include>
+                            </resource>
+                        </resources>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
