@@ -27,7 +27,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -90,14 +93,14 @@
 					<value>true</value>
 				</property>
 			</activation>
-			<properties>
-				<docker.image.name>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5008</docker.image.name>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>com.spotify</groupId>
 						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<entryPoint>["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5008","-jar", "/${project.build.finalName}.jar"]</entryPoint>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>

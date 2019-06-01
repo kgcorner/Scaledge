@@ -29,6 +29,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.0</version>
@@ -139,7 +143,7 @@
             <id>docker</id>
             <activation>
                 <property>
-                    <name>buildDocker</name>
+                    <name>build</name>
                 </property>
             </activation>
             <modules>
@@ -152,7 +156,6 @@
                 <module>intetgration-test</module>
                 <module>scaledge-eureka</module>
                 <module>scaledge-config</module>
-
             </modules>
         </profile>
     </profiles>
