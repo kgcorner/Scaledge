@@ -12,6 +12,8 @@ import com.kgcorner.scaledgeusers.dao.repo.UsersDataRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsersService {
 
@@ -25,6 +27,10 @@ public class UsersService {
      */
     public User getUser(String id) {
         return usersDataRepo.getById(id, User.class);
+    }
+
+    public List<User> getUsers() {
+        return usersDataRepo.getAll(User.class);
     }
 
     /**
@@ -53,5 +59,13 @@ public class UsersService {
         following.getFollowers().add(followerPreview);
         usersDataRepo.update(follower);
         usersDataRepo.update(following);
+    }
+
+    public User updateUser(String userId, User user) {
+        User savedUser = usersDataRepo.getById(userId, User.class);
+        if(savedUser == null)
+            throw new IllegalArgumentException("No Such user exists");
+        user.setId(userId);
+        return usersDataRepo.update(user);
     }
 }

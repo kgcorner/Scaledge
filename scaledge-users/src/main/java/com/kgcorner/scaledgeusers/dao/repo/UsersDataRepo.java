@@ -6,6 +6,7 @@ Author: kumar
 Created on : 27/5/19
 */
 
+import com.kgcorner.scaledgedata.dao.MongoDbUtil;
 import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
 import com.kgcorner.scaledgeusers.dao.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -11,6 +11,8 @@ import com.kgcorner.scaledge.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -33,5 +35,13 @@ public class UserService {
      */
     public UserDto getUser(String userID) {
         return client.getUser(userID);
+    }
+
+    public UserDto updateUser(String userId, UserDto user) {
+        return client.updateUser(userId, user);
+    }
+
+    public List<UserDto> getAllUsers() {
+        return client.getAllUser();
     }
 }

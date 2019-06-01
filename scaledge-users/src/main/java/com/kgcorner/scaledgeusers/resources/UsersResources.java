@@ -14,12 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UsersResources extends UsersExceptionAware{
 
     @Autowired
     private UsersService service;
 
+    /**
+     * Returns detail of given user
+     * @param userId
+     * @return
+     */
     @GetMapping("/users/{userId}")
     public User getUser(@PathVariable("userId") String userId) {
         if(Strings.isNullOrEmpty(userId)) {
@@ -50,4 +57,20 @@ public class UsersResources extends UsersExceptionAware{
         service.followUser(followerId, followingId);
     }
 
+    /**
+     * Updates user value
+     * @param userId
+     * @param user
+     * @return
+     */
+    @PutMapping(value = "/users/{userId}", consumes = Constants.PRODUCES_APPLICATION_JSON,
+        produces = Constants.PRODUCES_APPLICATION_JSON)
+    public User updateUser(@PathVariable("userId") String userId, @RequestBody User user) {
+        return service.updateUser(userId, user);
+    }
+
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return service.getUsers();
+    }
 }
