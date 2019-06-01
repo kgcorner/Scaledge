@@ -44,7 +44,7 @@ services:
       retries: 5
     ports:
       - '9001:9001'
-      - '5005:5005'
+      - '5006:5006'
     depends_on:
       config:
         condition: service_healthy
@@ -63,7 +63,7 @@ services:
       retries: 5
     ports:
       - '9002:9002'
-      - '5006:5006'
+      - '5009:5009'
     depends_on:
       config:
         condition: service_healthy
@@ -79,4 +79,4 @@ services:
         condition: service_healthy
     ports:
       - '8000:8080'
-      - '5007:5007'
+      - '5008:5008'
