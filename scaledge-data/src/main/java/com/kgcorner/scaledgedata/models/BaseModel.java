@@ -9,9 +9,6 @@ public class BaseModel implements Serializable {
     protected String id;
 
     public String getId() {
-        if(id.startsWith("ObjectId(")) {
-            return id.replace("ObjectId(\"","").replace("\")","");
-        }
         return id;
     }
 
