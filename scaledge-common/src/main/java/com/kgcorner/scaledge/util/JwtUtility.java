@@ -56,5 +56,15 @@ public class JwtUtility {
         }
     }
 
+    public static <T> T getClaim(String key, String token, Class<T> T) {
+        try {
+            DecodedJWT decodedJwt = JWT.decode(token);
+            return decodedJwt.getClaim(key).as(T);
+        }
+        catch (JWTVerificationException x) {
+            throw new IllegalArgumentException(x.getMessage());
+        }
+    }
+
 
 }

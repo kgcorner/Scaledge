@@ -2,6 +2,7 @@ package com.kgcorner.scaledgeauth.service;
 
 
 import com.kgcorner.scaledge.dto.TokenDto;
+import com.kgcorner.scaledge.dto.UserSecurityContext;
 import com.kgcorner.scaledge.previewobjects.UserPreview;
 import com.kgcorner.scaledge.util.GsonUtil;
 import com.kgcorner.scaledge.util.JwtUtility;
@@ -64,7 +65,9 @@ public class AuthenticationService {
         int expiresInSecond = properties.getBearerTokenExpiresInSecond();
         int refreshTokenLength = properties.getRefreshTokenLength();
         UserPreview user = login.getUser();
-        String userJson = GsonUtil.getGson().toJson(user);
+        String role = login.getRole();
+        UserSecurityContext userSecurityContext = new UserSecurityContext(user, role);
+        String userJson = GsonUtil.getGson().toJson(userSecurityContext);
         Map<String, String> claims = new HashMap<>();
         claims.put(USER_CLAIM_KEY, userJson);
         String jwtToken = JwtUtility.createJWTToken(secret, claims, expiresInSecond);
