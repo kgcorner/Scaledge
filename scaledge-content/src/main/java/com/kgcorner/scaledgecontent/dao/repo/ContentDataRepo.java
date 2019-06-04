@@ -7,6 +7,7 @@ Created on : 4/6/19
 */
 
 
+import com.kgcorner.scaledgeauth.services.CacheService;
 import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,10 @@ import java.util.List;
 public class ContentDataRepo implements ScaledgeRepository<Content> {
     @Autowired
     private MongoTemplate template;
+
+
+    @Autowired
+    private CacheService cacheService;
 
     /**
      * @see ScaledgeRepository#getAll(Class)
@@ -58,9 +63,14 @@ public class ContentDataRepo implements ScaledgeRepository<Content> {
      */
     @Override
     public Content getById(String id, Class<Content> type) {
+        Object cachedValue = cacheService.fetch(id);
+        if(cachedValue != null && cachedValue instanceof Content)
+            return (Content) cachedValue;
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
-        return template.findOne(query, type);
+        Content content = template.findOne(query, type);
+        cacheService.store(id, content);
+        return content;
     }
 
     /**
@@ -79,12 +89,14 @@ public class ContentDataRepo implements ScaledgeRepository<Content> {
     @Override
     public Content create(Content document) {
         template.insert(document);
+        cacheService.store(document.getId(), document);
         return  document;
     }
 
     @Override
     public Content update(Content document) {
         template.save(document);
+        cacheService.store(document.getId(), document);
         return document;
     }
 }

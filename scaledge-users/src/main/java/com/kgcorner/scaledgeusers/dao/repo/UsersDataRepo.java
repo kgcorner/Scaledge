@@ -7,6 +7,7 @@ Created on : 27/5/19
 */
 
 
+import com.kgcorner.scaledgeauth.services.CacheService;
 import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
 import com.kgcorner.scaledgeusers.dao.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class UsersDataRepo implements ScaledgeRepository<User> {
     @Autowired
     private MongoTemplate template;
 
+    @Autowired
+    private CacheService cacheService;
     /**
      * @see ScaledgeRepository#getAll(Class)
      */
@@ -59,9 +62,14 @@ public class UsersDataRepo implements ScaledgeRepository<User> {
      */
     @Override
     public User getById(String id, Class<User> type) {
+        Object cachedValue = cacheService.fetch(id);
+        if(cachedValue != null && cachedValue instanceof User)
+            return (User) cachedValue;
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
-        return template.findOne(query, type);
+        User user = template.findOne(query, type);
+        cacheService.store(id, user);
+        return user;
     }
 
     /**
@@ -80,12 +88,14 @@ public class UsersDataRepo implements ScaledgeRepository<User> {
     @Override
     public User create(User document) {
         template.insert(document);
+        cacheService.store(document.getId(), document);
         return  document;
     }
 
     @Override
     public User update(User document) {
         template.save(document);
+        cacheService.store(document.getId(), document);
         return document;
     }
 }

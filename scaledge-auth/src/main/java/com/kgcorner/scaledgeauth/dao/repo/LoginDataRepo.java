@@ -7,6 +7,7 @@ Created on : 25/5/19
 */
 
 import com.kgcorner.scaledgeauth.dao.entity.Login;
+import com.kgcorner.scaledgeauth.services.CacheService;
 import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,10 @@ import java.util.List;
 
 @Repository
 public class LoginDataRepo implements ScaledgeRepository<Login> {
+
+
+    @Autowired
+    private CacheService cacheService;
 
     @Autowired
     private MongoTemplate template;
@@ -58,9 +63,14 @@ public class LoginDataRepo implements ScaledgeRepository<Login> {
      */
     @Override
     public Login getById(String id, Class<Login> type) {
+        Object cachedValue = cacheService.fetch(id);
+        if(cachedValue != null && cachedValue instanceof Login)
+            return (Login) cachedValue;
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
-        return template.findOne(query, type);
+        Login login = template.findOne(query, type);
+        cacheService.store(id, login);
+        return login;
     }
 
     /**
@@ -78,13 +88,16 @@ public class LoginDataRepo implements ScaledgeRepository<Login> {
      */
     @Override
     public Login create(Login document) {
+
         template.insert(document);
+        cacheService.store(document.getId(), document);
         return  document;
     }
 
     @Override
     public Login update(Login document) {
         template.save(document);
+        cacheService.store(document.getId(), document);
         return document;
     }
 }

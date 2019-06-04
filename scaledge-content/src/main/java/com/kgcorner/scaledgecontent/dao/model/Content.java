@@ -16,6 +16,7 @@ public class Content implements Serializable  {
     private Date uploadDate;
     private String description;
     private String contentUrl;
+    private String id;
 
     public List<String> getTags() {
         return tags;
@@ -56,5 +57,13 @@ public class Content implements Serializable  {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
