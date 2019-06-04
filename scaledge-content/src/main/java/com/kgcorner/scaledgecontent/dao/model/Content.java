@@ -1,19 +1,21 @@
-package com.kgcorner.scaledgecontent.model;
+package com.kgcorner.scaledgecontent.dao.model;
 
 
-import com.kgcorner.scaledge.previewobjects.ImagePreview;
 import com.kgcorner.scaledge.previewobjects.UserPreview;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Document
-public class Image extends ImagePreview {
+public class Content implements Serializable  {
 
     private List<String> tags;
     private UserPreview uploader;
     private Date uploadDate;
+    private String description;
+    private String contentUrl;
 
     public List<String> getTags() {
         return tags;
@@ -37,5 +39,22 @@ public class Image extends ImagePreview {
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
+    }
+
+
+    public String getContentUrl() {
+        return contentUrl;
+    }
+
+    public void setContentUrl(String contentUrl) {
+        this.contentUrl = contentUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
