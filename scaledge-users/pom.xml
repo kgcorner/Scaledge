@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.kgcorner</groupId>
 			<artifactId>scaledge-data</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>${product.version}</version>
 		</dependency>
 
 		<dependency>
@@ -47,14 +47,18 @@
 		<dependency>
 			<groupId>com.kgcorner</groupId>
 			<artifactId>scaledge-common</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<scope>compile</scope>
+			<version>${product.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.kgcorner</groupId>
+            <artifactId>cache-service</artifactId>
+			<version>${product.version}</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

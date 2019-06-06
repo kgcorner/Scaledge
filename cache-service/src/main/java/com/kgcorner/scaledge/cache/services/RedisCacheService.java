@@ -1,4 +1,4 @@
-package com.kgcorner.scaledgeauth.services;
+package com.kgcorner.scaledge.cache.services;
 
 import org.springframework.stereotype.Service;
 

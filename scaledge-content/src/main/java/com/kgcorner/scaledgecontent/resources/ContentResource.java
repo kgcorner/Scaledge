@@ -13,12 +13,14 @@ import com.kgcorner.scaledgecontent.dao.model.Content;
 import com.kgcorner.scaledgecontent.services.ContentService;
 import com.kgcorner.scaledgecontent.services.ContentStorage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -33,17 +35,23 @@ public class ContentResource {
     @Autowired
     private ContentService service;
 
-    @PostMapping(value = "/contents", consumes = Constants.PRODUCES_APPLICATION_JSON)
+    @Value("${aws.s3.url}")
+    private String s3Url;
+
+    @PostMapping(value = "/contents",  consumes = Constants.PRODUCES_MULTIPART_FORM_DATA)
     public Content createContent(
         @RequestParam("tags") String tags,
         @RequestParam("description") String description,
         @RequestParam("userId") String userId,
         @RequestParam("name") String name,
         @RequestParam("image") MultipartFile image
-        ) {
+        ) throws IOException {
         if(image.isEmpty())
             throw new IllegalArgumentException("Image can't be empty");
         String url = storage.storeDocument(image);
+        if(url == null)
+            throw new IllegalArgumentException("Can't upload image");
+        url = s3Url + url;
         Content content = new Content();
         if(!Strings.isNullOrEmpty(tags))
             content.setTags(Arrays.asList(tags.split(",")));

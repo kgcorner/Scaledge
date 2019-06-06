@@ -7,7 +7,7 @@ Created on : 4/6/19
 */
 
 
-import com.kgcorner.scaledgeauth.services.CacheService;
+import com.kgcorner.scaledge.cache.services.CacheService;
 import com.kgcorner.scaledgedata.dao.ScaledgeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

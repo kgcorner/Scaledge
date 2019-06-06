@@ -67,6 +67,24 @@ services:
     depends_on:
       config:
         condition: service_healthy
+  content:
+      container_name: content
+      image: scaledge-content
+      links:
+        - config
+        - eureka
+        - mongo
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:9003/health"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+      ports:
+        - '9003:9003'
+        - '5007:5007'
+      depends_on:
+        config:
+          condition: service_healthy
 
   api:
     container_name: api

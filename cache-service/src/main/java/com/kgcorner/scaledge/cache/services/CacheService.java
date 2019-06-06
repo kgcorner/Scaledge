@@ -1,4 +1,4 @@
-package com.kgcorner.scaledgeauth.services;
+package com.kgcorner.scaledge.cache.services;
 
 public interface CacheService {
     boolean store(String id, Object object);
