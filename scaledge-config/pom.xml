@@ -15,7 +15,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-
+		<docker.image.name>scaledge-config</docker.image.name>
 	</properties>
 
 	<dependencies>
@@ -40,8 +40,33 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile >
+			<id>build</id>
+			<activation>
+				<property>
+					<name>buildDocker</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<entryPoint>["java","-jar", "/${project.build.finalName}.jar"]</entryPoint>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<repositories>
 		<repository>

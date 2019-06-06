@@ -15,22 +15,44 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<docker.image.name>scaledge-content</docker.image.name>
 	</properties>
 
 	<dependencies>
 
 		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>1.11.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.kgcorner</groupId>
+			<artifactId>scaledge-data</artifactId>
+			<version>${product.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>com.kgcorner</groupId>
+			<artifactId>scaledge-data</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.kgcorner</groupId>
+            <artifactId>scaledge-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -40,5 +62,48 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile >
+			<id>build</id>
+			<activation>
+				<property>
+					<name>buildDocker</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<entryPoint>["java","-jar", "/${project.build.finalName}.jar"]</entryPoint>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile >
+			<id>build-debug-docker</id>
+			<activation>
+				<property>
+					<name>buildDebugDocker</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.spotify</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+						<configuration>
+							<entryPoint>["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007","-jar", "/${project.build.finalName}.jar"]</entryPoint>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
